@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import router from "./routers/router.js";
-import dayjs from "dayjs";
 
 const app = express();
 app.use(cors());
