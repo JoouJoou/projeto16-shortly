@@ -1,5 +1,9 @@
 import { connection } from "../database/db.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export async function postUser(req, res) {
   try {
@@ -35,7 +39,10 @@ export async function postLogin(req, res) {
     ) {
       return res.sendStatus(401);
     }
-    return res.sendStatus(200);
+    const token = jwt.sign(req.body, process.env.TOKEN_SECRET, {
+      expiresIn: "10d",
+    });
+    return res.status(200).send(token);
   } catch {
     return res.sendStatus(500);
   }

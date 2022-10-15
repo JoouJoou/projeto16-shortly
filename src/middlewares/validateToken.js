@@ -1,18 +1,22 @@
-import { db } from "../database/db.js";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export async function validateToken(req, res, next) {
   const { authorization } = req.headers;
-  console.log(authorization);
   const token = authorization?.replace("Bearer ", "");
-  const session = await db.collection("sessions").findOne({ token });
-  if (!authorization) {
-    return res.status(401).send("Headers missing");
-  }
-  if (!session) {
-    return res.sendStatus(401);
-  }
 
-  res.locals.session = session;
+  if (!authorization) {
+    return res.status(401).send("no header");
+  }
+  try {
+    const verifiedUser = jwt.verify(token, process.env.SECRET_KEY);
+
+    res.locals.user = verifiedUser;
+  } catch (error) {
+    return res.status(401).send("invalid token");
+  }
 
   next();
 }
