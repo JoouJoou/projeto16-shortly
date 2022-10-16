@@ -39,9 +39,13 @@ export async function postLogin(req, res) {
     ) {
       return res.sendStatus(401);
     }
-    const token = jwt.sign(req.body, process.env.TOKEN_SECRET, {
-      expiresIn: "10d",
-    });
+    const token = jwt.sign(
+      { email: req.body.email, id: checkUser[0].id },
+      process.env.TOKEN_SECRET,
+      {
+        expiresIn: "10d",
+      }
+    );
     return res.status(200).send(token);
   } catch {
     return res.sendStatus(500);
