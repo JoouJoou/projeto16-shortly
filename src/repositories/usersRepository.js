@@ -22,3 +22,11 @@ export async function getSecondaryInfo(id) {
 export async function checkUser(id) {
   return connection.query(`SELECT * FROM users WHERE id = $1`, [id]);
 }
+
+export async function getRanking() {
+  return connection.query(`SELECT users.id, users.name, COUNT(links.id) AS "linksCount", SUM(links."visitsCount") AS "visitCount"
+FROM users JOIN links ON users.id = links."userId"
+GROUP BY users.id
+ORDER BY "visitCount" DESC
+LIMIT 10`);
+}

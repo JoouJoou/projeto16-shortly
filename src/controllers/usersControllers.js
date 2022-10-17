@@ -1,4 +1,3 @@
-import { connection } from "../database/db.js";
 import * as userRepository from "../repositories/usersRepository.js";
 
 export async function getUser(req, res) {
@@ -32,6 +31,8 @@ export async function getUser(req, res) {
 
 export async function getRanking(req, res) {
   try {
+    const { rows: ranking } = await userRepository.getRanking();
+    return res.status(200).send(ranking);
   } catch {
     return res.sendStatus(500);
   }
